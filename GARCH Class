@@ -33,6 +33,7 @@ class GARCH(object):
   def constraint1(self, p):
     return np.sum(self.params) - 1
 
+
   def constraint2(self, p):
     return 1 - (self.params[1] + self.params[2])
 
