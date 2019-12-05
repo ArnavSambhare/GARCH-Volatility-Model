@@ -1,9 +1,9 @@
 # GARCH-Volatility-Model
-This contains the code for GARCH(1,1) model coefficients.
+This contains the code for GARCH(p,q) model coefficients.
 
 The GARCH model (Generalized AutoRegressive Conditional Heteroskedasticity) is used to model the volatilities of stocks.
 
-Its general equation is:
+Its general equation for GARCH(1,1) is:
 <a href="https://www.codecogs.com/eqnedit.php?latex=(\sigma_{t})^{2}&space;=&space;\omega&space;&plus;&space;\alpha*r_{t}^{2}&space;&plus;&space;\beta*(\sigma_{t-1})^{2}" target="_blank"><img src="https://latex.codecogs.com/png.latex?(\sigma_{t})^{2}&space;=&space;\omega&space;&plus;&space;\alpha*r_{t}^{2}&space;&plus;&space;\beta*(\sigma_{t-1})^{2}" title="(\sigma_{t})^{2} = \omega + \alpha*r_{t}^{2} + \beta*(\sigma_{t-1})^{2}" /></a>
 
 
@@ -16,3 +16,5 @@ This is done by using the SLSQP optimizer in the scipy library to minimize the l
 The constraints in this problem are:
 1. <a href="https://www.codecogs.com/eqnedit.php?latex=\omega&space;&plus;&space;\alpha&space;&plus;&space;\beta&space;=&space;1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\omega&space;&plus;&space;\alpha&space;&plus;&space;\beta&space;=&space;1" title="\omega + \alpha + \beta = 1" /></a> 
 2. <a href="https://www.codecogs.com/eqnedit.php?latex=\alpha&space;&plus;&space;\beta&space;<&space;1" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\alpha&space;&plus;&space;\beta&space;<&space;1" title="\alpha + \beta < 1" /></a>
+
+p denotes the number of lags of the returns to be included and q denotes the number of lag periods of the volatility to be included in the model.
