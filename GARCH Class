@@ -1,0 +1,41 @@
+class GARCH(object):
+  def __init__(self, df):  
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    import scipy.optimize
+
+    self.df = df
+
+    self.df['logreturns'] = np.float32(0)
+    for i in range(1, len(self.df)):
+      self.df['logreturns'][i] = np.log(self.df['Adj Close'][i]/self.df['Adj Close'][i-1])
+
+
+    self.df['daily_volatility'] = np.float32(0)
+    lrs = self.df['logreturns'].values
+    for i in range(len(self.df)):
+      self.df['daily_volatility'][i] = np.std(lrs[:i+1])
+
+    self.returns = self.df['logreturns']
+    self.volatility = self.df['daily_volatility']
+
+    self.params = np.random.uniform(0,1,3)
+    self.constraints = [{'type':'eq', 'fun': self.constraint1}, {'type':'ineq', 'fun': self.constraint2}]
+    self.bounds = tuple([(0.0, 1.0)]*3)
+  
+  def cost_function(self, params):
+    alpha0 = self.params[0]
+    alpha1 = self.params[1]
+    beta1 = self.params[2]
+    return np.sum(np.log(alpha0 + alpha1*(self.returns[1:]**2) + beta1*(self.volatility[:-1]**2)) + self.returns[1:]**2 / (alpha0 + alpha1*(self.returns[1:]**2) + beta1*(self.volatility[:-1]**2)))
+
+  def constraint1(self, p):
+    return np.sum(self.params) - 1
+
+  def constraint2(self, p):
+    return 1 - (self.params[1] + self.params[2])
+
+  def get_coeff(self):
+    solution = scipy.optimize.minimize(self.cost_function, self.params, method='SLSQP', bounds = self.bounds, constraints = self.constraints)
+    return solution.x
